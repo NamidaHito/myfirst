@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Diário Sombrio</title>
+  <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Crimson+Pro&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Crimson Pro', serif;
+      background-color: #111;
+      color: #eee;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      font-family: 'UnifrakturCook', cursive;
+      font-size: 3em;
+      color: #b00000;
+      margin-bottom: 40px;
+      border-bottom: 2px solid #b00000;
+      padding-bottom: 10px;
+    }
+
+    .entrada {
+      margin-bottom: 30px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      background-color: #1a1a1a;
+      color: #eee;
+      border: 2px solid #b00000;
+      padding: 10px;
+      font-family: 'Crimson Pro', serif;
+      resize: vertical;
+    }
+
+    button {
+      background-color: #b00000;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    .diario-entry {
+      background-color: #1a1a1a;
+      border-left: 4px solid #b00000;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .diario-entry h2 {
+      margin-top: 0;
+      color: #c10000;
+    }
+
+    .diario-entry p {
+      white-space: pre-line;
+    }
+
+    .excluir-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #550000;
+      color: #eee;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.8em;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8em;
+      color: #555;
+      margin-top: 40px;
+    }
+/* Header completo */
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  margin-bottom: 40px;
+  border-bottom: 2px solid #b00000;
+  background-color: #111;
+}
+
+/* Lados do header */
+.lado-esquerdo,
+.lado-direito {
+  width: 160px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Imagens laterais */
+.imagem-header {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 3px solid #b00000;
+  object-fit: cover;
+  box-shadow: 0 0 10px #b00000;
+  transition: transform 0.3s;
+}
+
+.imagem-header:hover {
+  transform: scale(1.1);
+}
+
+/* Área do título */
+.centro {
+  flex: 1;
+  text-align: center;
+}
+
+/* Título com estilo original */
+.topo h1 {
+  font-family: 'UnifrakturCook', cursive;
+  font-size: 3em;
+  color: #b00000;
+  margin: 0;
+}
+
+
+
+  </style>
+</head>
+<body>
+<header class="topo">
+  <div class="lado-esquerdo">
+    <img src="imagens/g1.jpg" alt="Guts" class="imagem-header">
+  </div>
+
+  <div class="centro">
+    <h1>Meus Pensamentos</h1>
+  </div>
+
+  <div class="lado-direito">
+    <img src="imagens/g2.jpg" alt="Casca" class="imagem-header">
+  </div>
+</header>
+
+  <div class="entrada">
+    <textarea id="texto" placeholder="Escreva aqui o que está sentindo..."></textarea><br>
+    <button onclick="salvarEntrada()">Salvar Entrada</button>
+  </div>
+
+  <div id="entradas-salvas"></div>
+
+  <footer>Feito por mim, para mim. Não é o fim, apenas o caminho.</footer>
+
+  <script>
+    function salvarEntrada() {
+      const texto = document.getElementById('texto').value.trim();
+      if (texto === '') return;
+
+      const hoje = new Date();
+      const dataFormatada = hoje.toLocaleDateString('pt-BR');
+      const novaEntrada = {
+        id: Date.now(), // ID único para exclusão
+        data: dataFormatada,
+        texto: texto
+      };
+
+      let entradas = JSON.parse(localStorage.getItem('meuDiario')) || [];
+      entradas.unshift(novaEntrada);
+      localStorage.setItem('meuDiario', JSON.stringify(entradas));
+
+      document.getElementById('texto').value = '';
+      mostrarEntradas();
+    }
+
+    function excluirEntrada(id) {
+      let entradas = JSON.parse(localStorage.getItem('meuDiario')) || [];
+      entradas = entradas.filter(entrada => entrada.id !== id);
+      localStorage.setItem('meuDiario', JSON.stringify(entradas));
+      mostrarEntradas();
+    }
+
+    function mostrarEntradas() {
+      const container = document.getElementById('entradas-salvas');
+      container.innerHTML = '';
+      const entradas = JSON.parse(localStorage.getItem('meuDiario')) || [];
+
+      entradas.forEach(entrada => {
+        const div = document.createElement('div');
+        div.className = 'diario-entry';
+        div.innerHTML = `
+          <button class="excluir-btn" onclick="excluirEntrada(${entrada.id})">Excluir</button>
+          <h2>${entrada.data}</h2>
+          <p>${entrada.texto.replace(/\n/g, '<br>')}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    mostrarEntradas(); // exibe ao carregar
+  </script>
+
+</body>
+</html>
+
+git init
+git add .
+git commit -m "Primeiro commit"
+git branch -M main
+git remote add origin https://github.com/namidahito/myfirst.git
+git push -u origin main
